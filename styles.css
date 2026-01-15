@@ -24,14 +24,19 @@
             align-items: center;
             z-index: 1000;
             border-bottom: 1px solid #e0e0e0;
+            nav {
+         height: 80px;
+         display: flex;
+         align-items: left;
+}
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
-        }
+        .logo img {
+        height: 40px;        
+        width: auto;         
+         display: block;
+}
+
 
         .company-logos img {
             max-width: 100%;
@@ -420,3 +425,213 @@
                 grid-template-columns: 1fr;
             }
         }
+
+/* Registro */
+.registro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+  background: #f9f9f9;
+}
+
+.registro-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  font-family: 'Questrial', sans-serif;
+}
+
+.registro-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #0078d7;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+input:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+button.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #0078d7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button.btn-primary:hover {
+  background: #005fa3;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-link a {
+  color: #0078d7;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.carousel {
+  overflow: hidden;
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  border-radius: 12px;
+}
+
+.carousel-track {
+  display: flex;
+  width: calc(100% * 4); 
+  animation: slide 12s linear infinite;
+}
+
+.carousel-track img {
+  width: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0%); }
+  25% { transform: translateX(-100%); }
+  50% { transform: translateX(-200%); }
+  75% { transform: translateX(-300%); }
+  100% { transform: translateX(0%); }
+}
+
+.carousel-logos {
+    overflow: hidden;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 30px;
+    animation: scroll-logos 30s linear infinite;
+    -webkit-animation: scroll-logos 30s linear infinite;
+}
+
+.carousel-track img {
+    width: 120px;       /* tamaño fijo */
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* animación infinita sin saltos */
+@keyframes scroll-logos {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* mueve la mitad del track (logos duplicados) */
+}
+
+
+/* Login Section */
+.login {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.login-container {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgb(0 0 0 / 0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-top: 30px;
+  color: #0078ff;
+  margin-bottom: 30px;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+/* Formulario login (igual que registro) */
+.formulario-login .form-group {
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.formulario-login label {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.formulario-login input[type="email"],
+.formulario-login input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.formulario-login input[type="email"]:focus,
+.formulario-login input[type="password"]:focus {
+  border-color: #0078ff;
+  outline: none;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 15px 0;
+  font-size: 16px;
+}
+
+/* Link para registro */
+.registro-link {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #444;
+}
+
+.registro-link a {
+  color: #0078ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.registro-link a:hover {
+  text-decoration: underline;
+}

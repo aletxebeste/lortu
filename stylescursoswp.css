@@ -25,12 +25,10 @@
             border-bottom: 1px solid #e0e0e0;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
-            text-decoration: none;
+        .logo img {
+        height: 40px;        
+        width: auto;         
+         display: block;
         }
 
         .nav-links {

@@ -30,11 +30,10 @@ nav {
     border-bottom: 1px solid #e0e0e0;
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #1a1a1a;
-    letter-spacing: -0.5px;
+        .logo img {
+        height: 40px;        
+        width: auto;         
+         display: block;
 }
 
 .company-logos img {
@@ -423,3 +422,98 @@ nav {
                 grid-template-columns: 1fr;
             }
         }
+
+        /* =========================
+   CORRECCIÓN NAV FIXED
+========================= */
+body {
+    padding-top: 90px; /* evita que el nav tape el contenido */
+}
+
+/* =========================
+   CONTENIDO DE PÁGINAS (Sobre, Misión, etc.)
+========================= */
+.page-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 5%;
+}
+
+/* =========================
+   TÍTULOS
+========================= */
+.page-content h1,
+.page-content h2 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
+    color: #1a1a1a;
+}
+
+.page-content h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* =========================
+   PÁRRAFOS
+========================= */
+.page-content p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: #444;
+    margin-bottom: 1.5rem;
+    max-width: 750px;
+}
+
+/* =========================
+   SECCIONES
+========================= */
+.page-section {
+    margin-bottom: 4rem;
+}
+
+/* =========================
+   CONTACTO
+========================= */
+.contact-info {
+    margin-top: 2rem;
+}
+
+.contact-info p {
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.contact-info a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   BOTÓN CONTACTO
+========================= */
+.contact-button {
+    margin-top: 2rem;
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.contact-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
