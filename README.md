@@ -58,8 +58,10 @@ Investigar cómo hostear la web en cloudflare.
 21/01/2026
 Añadido todas las cosas de php del registro.
 
-
-
+22/01/2026
+Creadas las tablas y los campos de la base de datos.
+Configuración Maven.
+Añadido template de cursos con toda la info
 
 
 
