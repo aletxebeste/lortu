@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Acceso al curso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <link rel="icon" href="images/fav.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LORTU</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="index.html"><img src="images/textofull.png" alt="Logo LORTU"></a></div>
+        <div class="nav-links">
+            <a href="cursoswp.html">Catálogo</a>
+            <a href="Sobre.html">Sobre</a>
+            <a href="registro.html" class="btn-primary">Empezar</a>
+        </div>
+    </nav>
+</head>
+<body>
+  <main class="container">
+    <!-- Columna izquierda: texto + curso -->
+    <section class="left">
+      <div>
+        <div class="badge">
+          <span class="badge-dot"></span>
+          Curso activo · Acceso personalizado
+        </div>
+        <h1>Bienvenido de nuevo, Juan.<br />Tu curso está listo para continuar.</h1>
+        <p class="subtitle">
+          Revisa tu información, confirma los datos y entra directamente al entorno de aprendizaje.
+          Todo está preparado para que sigas donde lo dejaste.
+        </p>
+      </div>
+
+      <article class="course-card">
+        <div class="glow"></div>
+        <div class="course-tag">Curso · Desarrollo Backend con Java</div>
+        <div class="course-title">Java Backend: Arquitecturas, APIs y entornos empresariales</div>
+
+        <div class="course-meta">
+          <span class="pill">
+            <span class="pill-dot"></span>
+            32 horas · Nivel intermedio
+          </span>
+          <span class="pill">
+            Inicio: 10 febrero · Modalidad híbrida
+          </span>
+          <span class="pill">
+            Certificación LORTU · Proyecto final
+          </span>
+        </div>
+
+        <div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="progress-label">
+            <span>Progreso actual</span>
+            <span>35% completado</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="profile-card">
+        <div class="avatar">J</div>
+        <div>
+          <div class="profile-name">Juan Mou5</div>
+          <div class="profile-role">Alumno · Ruta Backend & Mobile</div>
+          <div class="profile-meta">
+            <span>ID alumno: #LRT-2048</span>
+            <span>Correo: juan@example.com</span>
+            <span>Estado: Activo</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Columna derecha: datos personales + acceso -->
+    <section class="right">
+      <article class="form-card">
+        <header>
+          <h2 style="font-size:16px; color:#e5e7eb; margin-bottom:4px;">
+            Confirma tus datos antes de entrar al curso
+          </h2>
+          <p class="helper">
+            Estos datos se usan para tu certificado, comunicaciones y personalización del contenido.
+          </p>
+        </header>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre">Nombre completo</label>
+            <input id="nombre" type="text" value="Juan Mou5" />
+          </div>
+          <div class="form-group">
+            <label for="dni">DNI / Identificación</label>
+            <input id="dni" type="text" placeholder="Introduce tu documento" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input id="email" type="email" value="juan@example.com" />
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono de contacto</label>
+            <input id="telefono" type="tel" placeholder="+34 ··· ··· ···" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ciudad">Ciudad</label>
+            <input id="ciudad" type="text" value="Donostia / San Sebastián" />
+          </div>
+          <div class="form-group">
+            <label for="modalidad">Modalidad preferida</label>
+            <select id="modalidad">
+              <option>Híbrida (presencial + online)</option>
+              <option>Solo presencial</option>
+              <option>Solo online</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="objetivo">Objetivo principal con este curso</label>
+          <input id="objetivo" type="text" placeholder="Ej: Mejorar mi perfil backend y optar a nuevos proyectos" />
+          <p class="helper">
+            Esto nos ayuda a adaptar recomendaciones, proyectos y recursos a tu situación real.
+          </p>
+        </div>
+
+        <div class="cta-row">
+          <span>
+            Al continuar, accedes al campus del curso y aceptas las condiciones de uso de LORTU.
+          </span>
+          <button class="btn-primary">
+            <span>Entrar al curso</span>
+            <span class="btn-primary-icon">➜</span>
+          </button>
+        </div>
+
+        <p class="note">
+          Podrás actualizar tus datos personales en cualquier momento desde tu panel de usuario.
+        </p>
+      </article>
+      
+    </section>
+  </main>
+</body>
+</html>
