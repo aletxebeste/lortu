@@ -217,15 +217,22 @@
     }
 
     .course-image {
-      width: 100%;
-      height: auto;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-      object-fit: contain;
-    }
+    width: 100%;
+    height: 220px; /* Ajusta esta altura a tu gusto, pero que sea fija */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee; /* Fondo por si falla la imagen */
+  }
+
+/* Esto hace que la foto se adapte sin deformarse */
+  .course-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* CORTA la imagen para que rellene el hueco sin estirarse */
+    display: block;
+  }
 
     .course-card:nth-child(2) .course-image {
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
