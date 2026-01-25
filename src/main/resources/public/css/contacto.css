@@ -1,0 +1,211 @@
+/* =========================================
+   STYLECONTACTO.CSS - COMPLETO
+   ========================================= */
+
+/* --- 1. RESET Y BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Questrial', sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 2. NAVEGACIÓN (IDÉNTICA) --- */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    background: rgba(250, 250, 250, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.logo img { height: 40px; width: auto; display: block; }
+
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-links a { text-decoration: none; color: #1a1a1a; font-weight: 500; font-size: 0.95rem; transition: opacity 0.3s; }
+.nav-links a:hover, .nav-links a.active { opacity: 0.6; color: #667eea; }
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+/* --- 3. CONTENIDO CONTACTO --- */
+.contact-wrapper {
+    margin-top: 80px; /* Librar el menú */
+    padding: 4rem 5%;
+    flex: 1; /* Sticky footer */
+    background: #fdfdfd;
+}
+
+.contact-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+}
+
+.contact-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contact-header p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Grid de 2 columnas */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* La columna del form es un poco más ancha */
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Columna Info */
+.info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.info-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border-left: 5px solid #667eea;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: #1a1a1a;
+}
+
+.info-card p {
+    color: #555;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.info-card a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.small { font-size: 0.9rem; color: #999; margin-top: 0.5rem !important; }
+
+/* Columna Formulario */
+.form-column {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background: #fafafa;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #667eea;
+    outline: none;
+    background: white;
+}
+
+textarea {
+    resize: vertical; /* Permite cambiar tamaño solo verticalmente */
+}
+
+.btn-block {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+/* --- 4. FOOTER (IDÉNTICO) --- */
+footer {
+    background: #1a1a1a;
+    color: white;
+    padding: 4rem 5% 2rem;
+    margin-top: auto;
+    width: 100%;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+}
+
+.footer-section h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: white; }
+.footer-section a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; margin-bottom: 0.5rem; transition: color 0.3s; }
+.footer-section a:hover { color: white; }
+.footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-header h1 { font-size: 2.2rem; }
+    .form-column { padding: 1.5rem; }
+}

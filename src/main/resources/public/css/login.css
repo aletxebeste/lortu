@@ -1,0 +1,270 @@
+/* =========================================
+   LOGIN.CSS - COMPLETO Y CORREGIDO
+   ========================================= */
+
+/* 1. RESET Y CONFIGURACIÓN DEL BODY (CRÍTICO PARA EL FOOTER) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Questrial', sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.6;
+    overflow-x: hidden;
+    
+    /* ESTAS 3 LÍNEAS ARREGLAN EL HUECO BLANCO: */
+    min-height: 100vh;      /* Obliga a la página a medir al menos el alto de la pantalla */
+    display: flex;          /* Convierte el body en una caja flexible */
+    flex-direction: column; /* Apila los elementos (Nav, Contenido, Footer) en vertical */
+}
+
+/* 2. NAVEGACIÓN */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    background: rgba(250, 250, 250, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #1a1a1a;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: opacity 0.3s;
+}
+
+.nav-links a:hover {
+    opacity: 0.6;
+}
+
+/* 3. FORMULARIOS (SECCIÓN PRINCIPAL) */
+.registro, .login {
+    /* ESTO HACE QUE SE EXPANDA Y EMPUJE EL FOOTER */
+    flex: 1; 
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    
+    /* Ajuste de padding: 120px arriba para librar el menú, 4rem abajo para aire */
+    padding: 120px 1rem 4rem; 
+    background: #f9f9f9;
+}
+
+.registro-container, .login-container {
+    background: #fff;
+    padding: 2.5rem; /* Un poco más de espacio interno */
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.registro-container h2, .login-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #0078d7;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+input:focus, select:focus {
+    border-color: #0078d7;
+    outline: none;
+}
+
+.login-link, .registro-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.login-link a, .registro-link a {
+    color: #0078d7;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover, .registro-link a:hover {
+    text-decoration: underline;
+}
+
+/* 4. BOTONES */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* Para el botón dentro del form, aseguramos ancho total si es necesario */
+    width: 100%; 
+    text-align: center;
+}
+/* Excepción para el botón del Nav que no debe ser 100% ancho */
+nav .btn-primary {
+    width: auto;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background: white;
+    color: #667eea;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    color: white;
+    padding: 1rem 2.5rem;
+    border: 2px solid white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background 0.3s, transform 0.3s;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+/* 5. FOOTER */
+footer {
+    background: #1a1a1a;
+    color: white;
+    padding: 4rem 5% 2rem;
+    width: 100%;
+    /* margin-top: auto ya no es estrictamente necesario con flex:1 pero se deja por seguridad */
+    margin-top: auto; 
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+}
+
+.footer-section h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.footer-section a {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* 6. MEDIA QUERIES */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+    }
+
+    .cta h2 {
+        font-size: 2.2rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        /* Opcional: Si quieres ocultar el menú en móvil como en los otros archivos */
+        /* display: none; */ 
+    }
+
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+}
