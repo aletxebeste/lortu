@@ -96,4 +96,8 @@ todo subido a la branch cambios-jp
 
 
 
-
+25/01/2026
+todo el contenido arreglado y ordenado en carpetas
+css mas completos
+htmls mejores
+hechas bien las conexiones.
