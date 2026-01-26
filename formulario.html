@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro De formacion Lortu - Registro Institucional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lortu-green: #000000;
+            --lortu-dark:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --lortu-light: #f8fafc;
+            --border: #e2e8f0;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--lortu-dark);
+        }
+
+        .lortu-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .brand-header {
+            background: var(--lortu-dark);
+            color: white;
+            padding: 50px 40px;
+            border-bottom: 5px solid var(--lortu-green);
+        }
+
+        .brand-header h1 { margin: 0; font-size: 32px; letter-spacing: -1.5px; }
+        .brand-header span { color: var(--lortu-green); }
+
+        form { padding: 40px; }
+
+        .form-section { margin-bottom: 45px; }
+        
+        .section-header {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--lortu-green);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header::after { content: ""; height: 1px; background: var(--border); flex-grow: 1; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        
+        label { font-size: 13px; font-weight: 600; color: #475569; }
+
+        input, select, textarea {
+            padding: 14px 18px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            background: var(--lortu-light);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--lortu-green);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+        }
+
+      
+        input[type="date"] {
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Course Cards */
+        .course-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .course-option {
+            position: relative;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .course-option input { position: absolute; opacity: 0; }
+        .course-option:has(input:checked) {
+            border-color: var(--lortu-green);
+            background: #f0fdf4;
+            transform: translateY(-2px);
+        }
+
+        .footer-action {
+            background: #f8fafc;
+            padding: 30px 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .submit-btn {
+            background: var(--lortu-green);
+            color: white;
+            padding: 16px 45px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover { background: #047857; transform: scale(1.02); }
+
+        @media (max-width: 768px) { .grid, .course-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="lortu-card">
+    <header class="brand-header">
+        <h1>Lortu <span>Hub</span></h1>
+        <p>Expertise in Cybersecurity, Java, Big Data & Android Development.</p>
+    </header>
+
+    <form action="/submit-lortu" method="POST">
+        
+        <div class="form-section">
+            <div class="section-header">01. Identidad y Perfil Profesional</div>
+            <div class="grid">
+                <div class="field">
+                    <label>Nombre</label>
+                    <input type="text" name="Primer Nombre" placeholder="Maite" required>
+                </div>
+                <div class="field">
+                    <label>Apellidos</label>
+                    <input type="text" name="Apellidos" placeholder="Apellidos" required>
+                </div>
+                <div class="field">
+                    <label>Perfil de LinkedIn (URL)</label>
+                    <input type="url" name="linkedin" placeholder="https://linkedin.com/in/tuperfil">
+                </div>
+                <div class="field">
+                    <label>Idioma Preferente de Instrucción</label>
+                    <select name="language">
+                        <option value="es">Castellano</option>
+                        <option value="eu">Euskera</option>
+                        <option value="en">English (Professional)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">02. Programa y Fecha de Inicio</div>
+            <div class="course-grid" style="margin-bottom: 24px;">
+                <label class="course-option">
+                    <input type="radio" name="course" value="ciber" checked>
+                    <strong>Ciberseguridad</strong>
+                    <p style="font-size: 12px; margin: 5px 0 0;">Defensive & Offensive Lab</p>
+                </label>
+                <label class="course-option">
+                    <input type="radio" name="course" value="java">
+                    <strong>Lenguaje Java</strong>
+                    <p style="font-size: 12px; margin: 5px 0 0;">Enterprise Architecture</p>
+                </label>
+                <label class="course-option">
+                    <input type="radio" name="course" value="android">
+                    <strong>Android Dev</strong>
+                    <p style="font-size: 12px; margin: 5px 0 0;">Native Mobile Apps</p>
+                </label>
+                <label class="course-option">
+                    <input type="radio" name="course" value="bigdata">
+                    <strong>Big Data</strong>
+                    <p style="font-size: 12px; margin: 5px 0 0;">Data Intelligence</p>
+                </label>
+            </div>
+            
+            <div class="grid">
+                <div class="field">
+                    <label>Seleccione su Fecha de Incorporación</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div class="field">
+                    <label>¿Cómo nos conoció?</label>
+                    <select name="discovery">
+                        <option value="social">Redes Sociales</option>
+                        <option value="referral">Recomendación Profesional</option>
+                        <option value="event">Evento en Donostia</option>
+                        <option value="press">Prensa / Media</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">03. Requerimientos de Infraestructura</div>
+            <div class="grid">
+                <div class="field">
+                    <label>Equipo de Trabajo</label>
+                    <select name="hardware">
+                        <option value="own">Traeré mi propio portátil (BYOD)</option>
+                        <option value="loan">Solicito equipo de préstamo de Lortu</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Sede de Asistencia</label>
+                    <select name="campus">
+                        <option value="gros">Gros Hub</option>
+                        <option value="antiguo">Antiguo Lab</option>
+                        <option value="egia">Egia Center</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-action">
+            <label style="font-size: 12px; color: var(--text-muted); cursor: pointer;">
+                <input type="checkbox" required> Declaro que los datos son verídicos.
+            </label>
+            <button type="submit" class="submit-btn">Registrar Logro</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
