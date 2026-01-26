@@ -1,0 +1,143 @@
+/* =========================================
+   ADMIN PANEL STYLES - LORTU CONSISTENCY
+   ========================================= */
+
+body {
+    background-color: #fafafa; /* Gris muy claro como el resto de la web */
+    font-family: 'Questrial', sans-serif;
+}
+
+/* Contenedor Principal */
+.admin-container {
+    max-width: 1400px;
+    margin: 120px auto 60px; /* 120px arriba para no chocar con el nav fijo */
+    padding: 0 5%;
+}
+
+/* Cabecera del Panel (Estilo similar al Hero) */
+.admin-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.admin-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.admin-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Rejilla de Consultas (Estilo similar al Course Grid) */
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 5rem;
+}
+
+/* Botones de Consulta (Convertidos en Tarjetas) */
+.btn-query {
+    background: white;
+    padding: 2.5rem 1.5rem;
+    text-decoration: none;
+    color: #1a1a1a;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+}
+
+.btn-query:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+    color: #667eea;
+}
+
+/* =========================================
+   ESTILOS PARA LAS TABLAS DE RESULTADOS
+   (Lo que genera Java en ejecutarConsultaAdmin)
+   ========================================= */
+
+/* Estilizamos la tabla que Java devuelve dinámicamente */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    margin: 2rem 0;
+    border: 1px solid #eee;
+}
+
+th {
+    background: #1a1a1a;
+    color: white;
+    padding: 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    font-size: 1rem;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: #f8faff;
+}
+
+/* Botón de volver dentro de los informes */
+.admin-container a[href='/html/admin.html'] {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.8rem 2rem;
+    background: #1a1a1a;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+.admin-container a[href='/html/admin.html']:hover {
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-header h1 {
+        font-size: 2.2rem;
+    }
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
