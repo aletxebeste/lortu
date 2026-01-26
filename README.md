@@ -29,10 +29,9 @@ Sostenibilidad  hecha de puta madre.
 Puesto los cursos en el index.
 Formulario hecho pero falta pulir últimos detalles 
 HAY QUE HACER ORGANIGRAMA
-HACER PLANIFICACIÓN PREVENTIVA. MÍNIMO 3 TABLAS. ELEGIR 3 PUESTOS Y HACER DE ESOS 3 O AGRUPAR 3 PUESTOS POR RIESGOS SIMILARES (PROFESORES, ADMINISTRACIÓN,
+HACER PLANIFICACIÓN PREVENTIVA. MÍNIMO 3 TABLAS. ELEGIR 3 PUESTOS Y HACER DE ESOS 3 O AGRUPAR 3 PUESTOS POR RIESGOS SIMILARES (PROFESORES, ADMINISTRACIÓN,etc)
 EVALUACIÓN DE RIESGO CON TABLA  TODO HECHO . 
 Agregar sobre,  términos de uso etc.
-
 
 
 15/01/2026
@@ -43,15 +42,11 @@ Presentación de la página con su índice,
 Creación del login y registro y más, arreglos en la página.
 
 
-
 16/01/2026
 
 Acceso a la máquina virtual de Nazaret mediante CMD y configuración de usuario. Update de repositorios e instalación de mysql.
 Configurada la VM de ubuntu de Nazaret y acceso garantizado desde mysql workbench.
 Investigar cómo hostear la web en cloudflare.
-
-
-
 
 
 21/01/2026
@@ -74,34 +69,32 @@ Igualado estilo de todas las webs para que se vean igual. Modificados navs, foot
 Búsqueda de imágenes para cada curso.
 
 
-
-
-
-
-
-
-
-
-
-
 24/01/2026
-finalizado todos los cursos con su respectivo form
-css arreglados
-falta hacer sobre.css
-falta arreglar css una cosa del cursoswp.css
-imagenes puestas con sus cursos
-todo subido a la branch cambios-jp
-
-
-
+Finalizado todos los cursos con su respectivo form
+Css arreglados
+Falta hacer sobre.css
+Falta arreglar css una cosa del cursoswp.css
+Imagenes puestas con sus cursos
+Todo subido a la branch cambios-jp
 
 
 25/01/2026
-todo el contenido arreglado y ordenado en carpetas
-css mas completos
-htmls mejores
-hechas bien las conexiones.
+Todo el contenido arreglado y ordenado en carpetas
+Css mas completos
+Htmls mejores
+Hechas bien las conexiones.
 Hemos gestionado la web para que este coherente y todavia nos faltan retocar varias cosas como fotografias, hacer el formulario de inscripción para los alumnos.
 Debido a la imposibilidad de acceder desde casa a la VM de nazaret pasamos a configurar una maquina virtual para el mysql en oracle cloud.
 Finalmente se decide instalar la base de datos MySQL en aws academy, en el lab. Configuramos el acceso con clave .pem para poder acceder.
 Web gestionada en la ruta de maven. Maven configurado y archivo de java creado correlativo a la base de datos.
+
+26/01/2026
+
+Asociada ip elastica a la instancia de aws para mantener la ip fija siempre, si no con carga reinicio la ip cambiaba y el proyecto había que modificarlo constantemente.
+Añadidas consultas al archivo app.java.
+Detectado problema de seguridad donde el usuario y pass de la base de datos aws se había subido github comprometiendo la seguridad del proyecto y haciéndolo accesible a posibles hackeos por parte de bots. Pasamos a cambiar usuario y pass de acceso y a añadir un archivo .gitignore al proyecto para que no se suban los datos de acceso.
+
+¡IMPORTANTE!
+Para ejecutar el proyecto, renombra el archivo "db.properties.example" a "db.properties" y pon la clave de la base de datos.
+
+
