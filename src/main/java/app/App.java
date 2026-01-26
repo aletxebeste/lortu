@@ -103,15 +103,27 @@ public class App {
             return null;
         });
 
+        // --- RUTA MODIFICADA: Ahora verifica si el usuario existe antes de inscribir ---
         post("/inscribir", (req, res) -> {
             String email = req.queryParams("email");
             int idCurso = Integer.parseInt(req.queryParams("id_curso"));
 
+            // 1. Verificación de seguridad: ¿Existe este email en nuestra base de datos?
+            if (!existeUsuario(email)) {
+                res.type("text/html; charset=UTF-8");
+                return "<html><body><h1 style='color:orange;'>Usuario no encontrado</h1>" +
+                       "<p>El email <b>" + email + "</b> no está registrado en LORTU.</p>" +
+                       "<p>Por favor, regístrate primero para poder inscribirte en los cursos.</p>" +
+                       "<a href='/html/registro.html'>Ir a Registro</a> | " +
+                       "<a href='/html/cursoswp.html'>Volver al catálogo</a></body></html>";
+            }
+
+            // 2. Si existe, procedemos con la inscripción normal
             if (inscribirAlumno(email, idCurso)) {
                 res.type("text/html; charset=UTF-8");
-                return "<body><h1 style='color:green;'>Inscripción Exitosa</h1><a href='/html/index.html'>Volver</a></body>";
+                return "<body><h1 style='color:green;'>Inscripción Exitosa</h1><p>Te has inscrito correctamente con el email: " + email + "</p><a href='/html/index.html'>Volver</a></body>";
             } else {
-                return "<h1>Error</h1><p>Verifica tu email.</p><a href='/html/cursoswp.html'>Volver</a>";
+                return "<h1>Error</h1><p>Hubo un problema al procesar tu inscripción.</p><a href='/html/cursoswp.html'>Volver</a>";
             }
         });
 
@@ -125,7 +137,21 @@ public class App {
 
     // --- 5. MÉTODOS DE ACCESO A DATOS (JDBC OPTIMIZADOS) ---
 
-    // Este método ahora recibe la conexión para no tener que abrir una nueva
+    // Nuevo método para validar si el email introducido en el curso existe de verdad
+    private static boolean existeUsuario(String email) {
+        String sql = "SELECT COUNT(*) AS total FROM usuarios WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total") > 0;
+                }
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
     private static int obtenerContadorInscritos(Connection conn, int idCurso) {
         String sql = "SELECT COUNT(*) AS total FROM inscripciones WHERE id_curso = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -137,7 +163,6 @@ public class App {
         return 0;
     }
 
-    // Este método ahora recibe la conexión para no tener que abrir una nueva
     private static int obtenerPlazasMax(Connection conn, int idCurso) {
         String sql = "SELECT plazas_max FROM cursos WHERE id_curso = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
