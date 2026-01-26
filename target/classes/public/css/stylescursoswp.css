@@ -58,6 +58,11 @@ nav {
     border-radius: 50px;
     font-weight: 600;
     transition: transform 0.3s;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
 }
 
 /* 3. HERO SECTION */
@@ -74,6 +79,13 @@ nav {
     font-weight: 900;
     margin-bottom: 1rem;
     line-height: 1.1;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0.9;
 }
 
 /* 4. CONTENIDO PRINCIPAL Y GRID */
@@ -93,6 +105,9 @@ nav {
 .results-count {
     color: #666;
     font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .courses-grid {
@@ -111,6 +126,7 @@ nav {
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
+    border: 1px solid #eee;
 }
 
 .course-card:hover {
@@ -130,14 +146,17 @@ nav {
 }
 
 .course-content {
-    padding: 1.5rem;
+    padding: 2rem;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .course-meta { margin-bottom: 1rem; }
 
 .course-badge {
     background: #f0f0f0;
+    color: #333;
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -145,17 +164,52 @@ nav {
 }
 
 .course-content h3 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin-bottom: 10px;
     color: #1a1a1a;
+    font-weight: 700;
+}
+
+.course-content p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
 }
 
 .course-content a {
     display: inline-block;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     color: #667eea;
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.course-content a:hover {
+    color: #764ba2;
+}
+
+/* 5.1 INFORMACIÓN DE PLAZAS (Nuevo ajuste para que se vea bien) */
+.plazas-info {
+    margin-top: auto; /* Empuja la info al final de la tarjeta */
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.plazas-info strong {
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+/* Estilo para el número de disponibles para que resalte */
+.plazas-info strong[style*="color"] {
+    font-size: 1rem;
 }
 
 /* 6. FAQ SECTION */
@@ -167,6 +221,16 @@ nav {
 .faq-container {
     max-width: 800px;
     margin: 0 auto;
+}
+
+.faq-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.faq-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
 }
 
 .faq-item {
@@ -182,51 +246,62 @@ nav {
     margin-bottom: 10px;
 }
 
-/* --- FOOTER (Copiado exactamente de tu Index) --- */
+.faq-answer {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* 7. FOOTER */
 footer {
-  background: #1a1a1a;
-  color: white;
-  padding: 4rem 5% 2rem;
-  width: 100%; /* Asegura que ocupe todo el ancho */
-  clear: both;
+    background: #1a1a1a;
+    color: white;
+    padding: 4rem 5% 2rem;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    clear: both;
 }
 
 .footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3rem;
-  max-width: 1400px;
-  margin: 0 auto 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
 }
 
 .footer-section h4 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 .footer-section a {
-  display: block;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  margin-bottom: 0.5rem;
-  transition: color 0.3s;
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
 }
 
 .footer-section a:hover {
-  color: white;
+    color: white;
 }
 
 .footer-bottom {
-  text-align: center;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
 }
 
 /* 8. RESPONSIVE */
 @media (max-width: 768px) {
     .hero h1 { font-size: 2.5rem; }
+    .hero p { font-size: 1rem; }
     .footer-content { text-align: center; }
-    .nav-links { display: none; } /* Podrías añadir un menú hamburguesa luego */
+    .nav-links { display: none; }
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
 }

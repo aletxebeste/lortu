@@ -87,6 +87,7 @@ Hemos gestionado la web para que este coherente y todavia nos faltan retocar var
 Debido a la imposibilidad de acceder desde casa a la VM de nazaret pasamos a configurar una maquina virtual para el mysql en oracle cloud.
 Finalmente se decide instalar la base de datos MySQL en aws academy, en el lab. Configuramos el acceso con clave .pem para poder acceder.
 Web gestionada en la ruta de maven. Maven configurado y archivo de java creado correlativo a la base de datos.
+Web gestionada en la ruta de maven. Maven configurado y archivo de java creado correlativo a la base de datos.
 
 26/01/2026
 
