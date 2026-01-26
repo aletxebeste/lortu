@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario de registro en LORTU">
+    <title>LORTU - Formulario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="icon" href=".../images/fav.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/stylesformulario.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/html/index.html"><img src="../images/textofull.png" alt="Logo LORTU"></a></div>
+        <div class="nav-links">
+            <a href="/html/cursoswp.html">Formación</a>
+            <a href="/html/Sobre.html">Nosotros</a>
+            <a href="/html/contacto.html">Contacto</a>
+            <a href="/html/registro.html" class="btn-primary">Empezar</a>
+        </div>
+    </nav>
+
+    <main class="registro">
+        <div class="registro-container">
+            <h1>Formulario de Registro</h1>
+            <form method="POST" action="../api/registro">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" minlength="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contraseña">Contraseña</label>
+                    <input type="password" id="contraseña" name="contraseña" minlength="8" required>
+                </div>
+
+                <button type="submit" class="btn-secondary">Enviar</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section"><h4>Aprender</h4><a href="../html/cursoswp.html">Todos los cursos</a></div>
+            <div class="footer-section"><h4>Empresa</h4><a href="../html/Sobre.html">Sobre nosotros</a></div>
+            <div class="footer-section"><h4>Soporte</h4><a href="../html/terminosuso.html">Términos de uso</a><a href="../html/contacto.html">Contáctanos</a></div>
+            <div class="footer-section"><h4>Comunidad</h4><a href="#">Discord</a><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 LORTU.</p></div>
+    </footer>
+</body>
+</html>
