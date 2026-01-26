@@ -16,7 +16,7 @@ public class App {
     private static final String DB_PASS = obtenerPassword();
 
     /**
-     * Carga la contraseña desde el archivo local db.properties.txt.
+     * Carga la contraseña desde el archivo local db.properties
      */
     private static String obtenerPassword() {
         Properties prop = new Properties();
