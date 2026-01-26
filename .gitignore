@@ -1,0 +1,13 @@
+# Ignorar el archivo de contraseñas (FUNDAMENTAL)
+db.properties
+
+# Ignorar archivos compilados de Java
+/target/
+*.class
+
+# Ignorar configuraciones locales de VS Code
+.vscode/
+
+# Ignorar archivos temporales del sistema
+.DS_Store
+Thumbs.db
