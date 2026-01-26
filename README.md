@@ -11,7 +11,6 @@ Base del index hecho
 Página de cursos creada y hecho enlaces con el index.
 Creado un css distinto para cada página.
 
-
 14/01/2026
 
 Elección de nombre “lortu” para la empresa.
@@ -30,9 +29,10 @@ Sostenibilidad  hecha de puta madre.
 Puesto los cursos en el index.
 Formulario hecho pero falta pulir últimos detalles 
 HAY QUE HACER ORGANIGRAMA
-HACER PLANIFICACIÓN PREVENTIVA. MÍNIMO 3 TABLAS. ELEGIR 3 PUESTOS Y HACER DE ESOS 3 O AGRUPAR 3 PUESTOS POR RIESGOS SIMILARES (PROFESORES, ADMINISTRACIÓN,).
+HACER PLANIFICACIÓN PREVENTIVA. MÍNIMO 3 TABLAS. ELEGIR 3 PUESTOS Y HACER DE ESOS 3 O AGRUPAR 3 PUESTOS POR RIESGOS SIMILARES (PROFESORES, ADMINISTRACIÓN,
 EVALUACIÓN DE RIESGO CON TABLA  TODO HECHO . 
 Agregar sobre,  términos de uso etc.
+
 
 
 15/01/2026
@@ -43,6 +43,7 @@ Presentación de la página con su índice,
 Creación del login y registro y más, arreglos en la página.
 
 
+
 16/01/2026
 
 Acceso a la máquina virtual de Nazaret mediante CMD y configuración de usuario. Update de repositorios e instalación de mysql.
@@ -50,17 +51,18 @@ Configurada la VM de ubuntu de Nazaret y acceso garantizado desde mysql workbenc
 Investigar cómo hostear la web en cloudflare.
 
 
+
+
+
 21/01/2026
 
 Añadido todas las cosas de php del registro.
-
 
 22/01/2026
 
 Creadas las tablas y los campos de la base de datos.
 Configuración Maven.
 Añadido template de cursos con toda la info.
-
 
 23/01/2026
 
@@ -72,6 +74,16 @@ Igualado estilo de todas las webs para que se vean igual. Modificados navs, foot
 Búsqueda de imágenes para cada curso.
 
 
+
+
+
+
+
+
+
+
+
+
 24/01/2026
 finalizado todos los cursos con su respectivo form
 css arreglados
@@ -81,8 +93,15 @@ imagenes puestas con sus cursos
 todo subido a la branch cambios-jp
 
 
+
+
+
 25/01/2026
 todo el contenido arreglado y ordenado en carpetas
 css mas completos
 htmls mejores
 hechas bien las conexiones.
+Hemos gestionado la web para que este coherente y todavia nos faltan retocar varias cosas como fotografias, hacer el formulario de inscripción para los alumnos.
+Debido a la imposibilidad de acceder desde casa a la VM de nazaret pasamos a configurar una maquina virtual para el mysql en oracle cloud.
+Finalmente se decide instalar la base de datos MySQL en aws academy, en el lab. Configuramos el acceso con clave .pem para poder acceder.
+Web gestionada en la ruta de maven. Maven configurado y archivo de java creado correlativo a la base de datos.
