@@ -267,26 +267,4 @@ footer {
     .course-grid {
         grid-template-columns: 1fr;
     }
-
-
-/* 7. CHECKBOX STYLING */
-.course-checkbox {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    justify-content: space-between;
-    gap: 0.75rem;
-}
-
-.course-checkbox input[type="checkbox"] {
-    width: auto;
-    cursor: pointer;
-    order: 2;
-}
-
-.course-checkbox label {
-    margin-bottom: 0;
-    cursor: pointer;
-    order: 1;
-}
 }

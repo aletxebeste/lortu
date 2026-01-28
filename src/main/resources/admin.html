@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - LORTU</title>
+    
+    <link rel="stylesheet" href="/css/stylescursoswp.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <a href="/html/index.html">
+                <img src="/images/textofull.png" alt="LORTU">
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="/html/login.html" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <main class="admin-container">
+        <header class="admin-header">
+            <h1>Panel de Control AWS</h1>
+            <p>Conexión activa con la base de datos <strong>lortu_db</strong>. Selecciona un informe técnico.</p>
+        </header>
+
+        <section class="admin-grid">
+            <a href="/admin/consulta/1" class="btn-query">1. Lista de Alumnos</a>
+            <a href="/admin/consulta/2" class="btn-query">2. Catálogo de Cursos</a>
+            <a href="/admin/consulta/3" class="btn-query">3. Gestión de Aulas</a>
+            <a href="/admin/consulta/4" class="btn-query">4. Administradores</a>
+
+            <a href="/admin/consulta/5" class="btn-query">5. Cursos Larga Duración (>80h)</a>
+            <a href="/admin/consulta/6" class="btn-query">6. Cursos Subvencionados</a>
+            <a href="/admin/consulta/7" class="btn-query">7. Inscripciones Confirmadas</a>
+            <a href="/admin/consulta/8" class="btn-query">8. Alumnos Excelencia (>8.0)</a>
+
+            <a href="/admin/consulta/9" class="btn-query">9. Ocupación por Curso</a>
+            <a href="/admin/consulta/10" class="btn-query">10. Ubicación (Curso y Aula)</a>
+            <a href="/admin/consulta/11" class="btn-query">11. Promedio de Horas</a>
+            <a href="/admin/consulta/12" class="btn-query">12. Capacidad Total Centro</a>
+
+            <a href="/admin/consulta/13" class="btn-query">13. Cuentas Corporativas</a>
+            <a href="/admin/consulta/14" class="btn-query">14. Actividad de Hoy</a>
+            <a href="/admin/consulta/15" class="btn-query">15. Pendientes de Calificar</a>
+            <a href="/admin/consulta/16" class="btn-query">16. Agenda: Aula 101</a>
+
+            <a href="/admin/consulta/17" class="btn-query">17. Historial Completo</a>
+            <a href="/admin/consulta/18" class="btn-query">18. Total Reservas Global</a>
+            <a href="/admin/consulta/19" class="btn-query">19. Grupos Reducidos (<15)</a>
+            <a href="/admin/consulta/20" class="btn-query">20. Ranking Mejores Notas</a>
+        </section>
+
+        <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ccc;">
+
+        <section class="admin-management" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 50px;">
+            
+            <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #ffa500;">
+                <h2 style="margin-top: 0; color: #333;">🔎 Consulta Variable</h2>
+                <p style="color: #666; font-size: 0.9em;">Selecciona un curso para ver los alumnos inscritos en AWS.</p>
+                
+                <form action="/admin/alumnos_curso" method="get" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Seleccionar Curso:</label>
+                        <select name="id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: white;">
+                            {{OPCIONES_CURSOS}}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-query" style="background: #ffa500; color: white; border: none; cursor: pointer; transition: 0.3s; padding: 10px; border-radius: 5px;">
+                        Consultar Alumnos por Curso
+                    </button>
+                </form>
+            </div>
+
+            <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #007bff;">
+                <h2 style="margin-top: 0; color: #333;">⚙️ Modificar Parámetros</h2>
+                <p style="color: #666; font-size: 0.9em;">Actualiza plazas y horas totales seleccionando el nombre del curso.</p>
+                
+                <form action="/admin/actualizar_curso" method="post" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Curso a modificar:</label>
+                        <select name="id" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; background: white; margin-bottom: 10px;">
+                            {{OPCIONES_CURSOS}}
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Nuevas Plazas:</label>
+                            <input type="number" name="plazas" placeholder="Ej: 20" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Nuevas Horas:</label>
+                            <input type="number" name="horas" placeholder="Ej: 120" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-query" style="background: #007bff; color: white; border: none; cursor: pointer; margin-top: 5px; padding: 10px; border-radius: 5px;">
+                        Actualizar en AWS RDS
+                    </button>
+                </form>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2026 LORTU - Sistema de Gestión Sincronizado con AWS</p>
+        </div>
+    </footer>
+</body>
+</html>

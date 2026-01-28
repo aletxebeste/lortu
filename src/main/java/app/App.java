@@ -35,19 +35,24 @@ public class App {
         port(4567);
         staticFiles.location("/public"); 
 
-        // --- 2. RUTA DINÁMICA PARA EL CATÁLOGO (OPTIMIZADA PARA VELOCIDAD) ---
+        // --- 2. RUTAS DE NAVEGACIÓN Y CATÁLOGO ---
+
+        get("/", (req, res) -> {
+            res.redirect("/html/login.html");
+            return null;
+        });
+
+        // Ruta para el Catálogo de Cursos (Dinámica)
         get("/html/cursoswp.html", (req, res) -> {
             String path = "src/main/resources/public/html/cursos_plantilla.html";
             try {
-                // Leemos el archivo usando UTF-8
                 byte[] bytes = Files.readAllBytes(Paths.get(path));
                 String contenidoHtml = new String(bytes, "UTF-8");
 
-                // MEJORA DE VELOCIDAD: Abrimos UNA SOLA conexión para todos los reemplazos
                 try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
                     for (int i = 1; i <= 4; i++) {
-                        int maxPlazas = obtenerPlazasMax(conn, i); // Usamos la conexión abierta
-                        int inscritos = obtenerContadorInscritos(conn, i); // Usamos la conexión abierta
+                        int maxPlazas = obtenerPlazasMax(conn, i);
+                        int inscritos = obtenerContadorInscritos(conn, i);
                         int disponibles = maxPlazas - inscritos;
                         
                         contenidoHtml = contenidoHtml.replace("TOTAL_" + i, String.valueOf(maxPlazas));
@@ -63,12 +68,31 @@ public class App {
             }
         });
 
-        get("/", (req, res) -> {
-            res.redirect("/html/login.html");
-            return null;
+        // RUTA MODIFICADA: Panel de Administración Dinámico
+        // Ahora busca el archivo directamente en src/main/resources/admin.html
+        get("/html/admin.html", (req, res) -> {
+            // HEMOS CAMBIADO ESTA RUTA PARA QUE COINCIDA CON EL MOVIMIENTO DEL ARCHIVO
+            String path = "src/main/resources/admin.html"; 
+            try {
+                byte[] bytes = Files.readAllBytes(Paths.get(path));
+                String contenidoHtml = new String(bytes, "UTF-8");
+
+                // Generamos el HTML de las opciones de los cursos desde AWS
+                String opcionesCursos = obtenerHtmlOpcionesCursos();
+
+                // Reemplazamos el marcador dinámico por la lista de cursos de la BD
+                contenidoHtml = contenidoHtml.replace("{{OPCIONES_CURSOS}}", opcionesCursos);
+
+                res.type("text/html; charset=UTF-8");
+                return contenidoHtml;
+            } catch (Exception e) {
+                res.status(500);
+                return "Error al procesar el panel de administración: " + e.getMessage() + 
+                       " (Buscando en: " + Paths.get(path).toAbsolutePath() + ")";
+            }
         });
 
-        // --- 3. PROCESOS DE FORMULARIO (POST) ---
+        // --- 3. PROCESOS DE USUARIO (LOGIN, REGISTRO, INSCRIPCIÓN) ---
 
         post("/login", (req, res) -> {
             String correo = req.queryParams("email");
@@ -84,7 +108,7 @@ public class App {
             }
 
             if (user.getRol().equalsIgnoreCase("admin")) {
-                res.redirect("/html/admin.html?usuario=" + user.getNombre());
+                res.redirect("/html/admin.html");
             } else {
                 res.redirect("/html/index.html");
             }
@@ -103,31 +127,77 @@ public class App {
             return null;
         });
 
-        // --- RUTA MODIFICADA: Ahora verifica si el usuario existe antes de inscribir ---
         post("/inscribir", (req, res) -> {
             String email = req.queryParams("email");
             int idCurso = Integer.parseInt(req.queryParams("id_curso"));
 
-            // 1. Verificación de seguridad: ¿Existe este email en nuestra base de datos?
             if (!existeUsuario(email)) {
                 res.type("text/html; charset=UTF-8");
                 return "<html><body><h1 style='color:orange;'>Usuario no encontrado</h1>" +
                        "<p>El email <b>" + email + "</b> no está registrado en LORTU.</p>" +
-                       "<p>Por favor, regístrate primero para poder inscribirte en los cursos.</p>" +
-                       "<a href='/html/registro.html'>Ir a Registro</a> | " +
-                       "<a href='/html/cursoswp.html'>Volver al catálogo</a></body></html>";
+                       "<a href='/html/registro.html'>Ir a Registro</a></body></html>";
             }
 
-            // 2. Si existe, procedemos con la inscripción normal
             if (inscribirAlumno(email, idCurso)) {
                 res.type("text/html; charset=UTF-8");
-                return "<body><h1 style='color:green;'>Inscripción Exitosa</h1><p>Te has inscrito correctamente con el email: " + email + "</p><a href='/html/index.html'>Volver</a></body>";
+                return "<body><h1 style='color:green;'>Inscripción Exitosa</h1><a href='/html/index.html'>Volver</a></body>";
             } else {
-                return "<h1>Error</h1><p>Hubo un problema al procesar tu inscripción.</p><a href='/html/cursoswp.html'>Volver</a>";
+                return "<h1>Error</h1><p>Hubo un problema al procesar tu inscripción.</p>";
             }
         });
 
-        // --- 4. RUTA INFORMES ADMIN ---
+        // --- 4. RUTAS DE ADMINISTRACIÓN INTERACTIVA ---
+
+        get("/admin/alumnos_curso", (req, res) -> {
+            String idCurso = req.queryParams("id");
+            if (idCurso == null || idCurso.isEmpty()) return "ID de curso no proporcionado.";
+
+            StringBuilder html = new StringBuilder("<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><link rel='stylesheet' href='/css/admin.css'></head><body>");
+            html.append("<div class='admin-container' style='padding:50px;'><h1>Alumnos inscritos en Curso seleccionado:</h1>");
+            html.append("<table border='1' style='width:100%; border-collapse:collapse;'><tr style='background:#ffa500; color:white;'><th>Nombre Alumno</th><th>Email</th></tr>");
+
+            String sql = "SELECT u.nombre, u.email FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.id_curso = ?";
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, Integer.parseInt(idCurso));
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        html.append("<tr><td style='padding:10px;'>").append(rs.getString("nombre"))
+                            .append("</td><td style='padding:10px;'>").append(rs.getString("email")).append("</td></tr>");
+                    }
+                }
+            } catch (SQLException e) { return "Error SQL: " + e.getMessage(); }
+
+            html.append("</table><br><a href='/html/admin.html' style='padding:10px; background:#333; color:white; text-decoration:none;'>Volver al Panel</a></div></body></html>");
+            res.type("text/html; charset=UTF-8");
+            return html.toString();
+        });
+
+        post("/admin/actualizar_curso", (req, res) -> {
+            int id = Integer.parseInt(req.queryParams("id"));
+            int plazas = Integer.parseInt(req.queryParams("plazas"));
+            int horas = Integer.parseInt(req.queryParams("horas"));
+
+            String sql = "UPDATE cursos SET plazas_max = ?, horas = ? WHERE id_curso = ?";
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, plazas);
+                ps.setInt(2, horas);
+                ps.setInt(3, id);
+                
+                int actualizados = ps.executeUpdate();
+                res.type("text/html; charset=UTF-8");
+                if (actualizados > 0) {
+                    return "<html><body><h2 style='color:green;'>✅ Base de Datos AWS Actualizada</h2><p>Los cambios se han aplicado correctamente.</p><a href='/html/admin.html'>Volver al Panel</a></body></html>";
+                } else {
+                    return "<h2>❌ No se pudo actualizar el curso</h2><a href='/html/admin.html'>Volver</a>";
+                }
+            } catch (SQLException e) { return "Error al conectar con AWS: " + e.getMessage(); }
+        });
+
+        // --- 5. RUTA INFORMES ADMIN (LOS 20 INFORMES FIJOS) ---
         get("/admin/consulta/:id", (req, res) -> {
             int idConsulta = Integer.parseInt(req.params(":id"));
             res.type("text/html; charset=UTF-8"); 
@@ -135,18 +205,36 @@ public class App {
         });
     }
 
-    // --- 5. MÉTODOS DE ACCESO A DATOS (JDBC OPTIMIZADOS) ---
+    // --- 6. MÉTODOS DE APOYO Y ACCESO A DATOS (JDBC) ---
 
-    // Nuevo método para validar si el email introducido en el curso existe de verdad
+    private static String obtenerHtmlOpcionesCursos() {
+        StringBuilder opciones = new StringBuilder();
+        String sql = "SELECT id_curso, nombre FROM cursos ORDER BY nombre ASC";
+        
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                int id = rs.getInt("id_curso");
+                String nombre = rs.getString("nombre");
+                opciones.append("<option value='").append(id).append("'>")
+                        .append(nombre).append("</option>");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "<option>Error al cargar cursos de AWS</option>";
+        }
+        return opciones.toString();
+    }
+
     private static boolean existeUsuario(String email) {
         String sql = "SELECT COUNT(*) AS total FROM usuarios WHERE email = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("total") > 0;
-                }
+                if (rs.next()) return rs.getInt("total") > 0;
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
@@ -176,14 +264,13 @@ public class App {
 
     private static Usuario validarUsuario(String email, String pass) {
         String sql = "SELECT id_usuario, nombre, email, password, rol FROM usuarios WHERE email = ? AND password = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, email);
-                ps.setString(2, pass);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return new Usuario(rs.getInt("id_usuario"), rs.getString("nombre"), rs.getString("email"), rs.getString("password"), rs.getString("rol"));
-                    }
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, pass);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Usuario(rs.getInt("id_usuario"), rs.getString("nombre"), rs.getString("email"), rs.getString("password"), rs.getString("rol"));
                 }
             }
         } catch (SQLException e) { e.printStackTrace(); }
@@ -212,7 +299,7 @@ public class App {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    // --- 6. MOTOR DE INFORMES ADMIN ---
+    // --- 7. MOTOR DE INFORMES ADMIN (SWITCH) ---
 
     private static String ejecutarConsultaAdmin(int num) {
         String sql = "";
