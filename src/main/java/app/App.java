@@ -344,23 +344,23 @@ public class App {
             case 4: consultaSql = "SELECT nombre, email FROM usuarios WHERE rol = 'admin'"; tituloReporte = "4. Administradores del Sistema"; break;
             case 5: consultaSql = "SELECT nombre, horas FROM cursos WHERE horas > 60"; tituloReporte = "5. Cursos de Larga Duración (Mas de 60 horas)"; break;
             case 6: consultaSql = "SELECT nombre FROM cursos WHERE subvencionado = 1"; tituloReporte = "6. Cursos con Subvención Activa"; break;
-            case 7: consultaSql = "SELECT * FROM inscripciones WHERE estado = 'Confirmada'"; tituloReporte = "7. Inscripciones Confirmadas"; break;
+            case 7: consultaSql = "SELECT u.nombre AS Alumno, c.nombre AS Curso, i.fecha_reserva, i.estado FROM inscripciones i JOIN usuarios u ON i.id_usuario = u.id_usuario JOIN cursos c ON i.id_curso = c.id_curso WHERE i.estado = 'Confirmada'"; tituloReporte = "7. Inscripciones Confirmadas (Detallado)"; break;
             case 8: consultaSql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final > 8"; tituloReporte = "8. Cuadro de Honor: Alumnos de Excelencia"; break;
             case 9: consultaSql = "SELECT c.nombre, COUNT(i.id_usuario) as inscritos FROM cursos c LEFT JOIN inscripciones i ON c.id_curso = i.id_curso GROUP BY c.id_curso, c.nombre"; tituloReporte = "9. Ocupación Actual por Curso"; break;
             case 10: consultaSql = "SELECT c.nombre as Curso, a.nombre as Aula FROM cursos c JOIN aulas a ON c.id_aula = a.id_aula"; tituloReporte = "10. Ubicación Física (Asignación Curso y Aula)"; break;
             case 11: consultaSql = "SELECT AVG(horas) as promedio FROM cursos"; tituloReporte = "11. Promedio de Horas Lectivas del Centro"; break;
             case 12: consultaSql = "SELECT SUM(capacidad) as total FROM aulas"; tituloReporte = "12. Capacidad Total Instalada (Aforo)"; break;
-            case 13: consultaSql = "SELECT nombre, email FROM usuarios WHERE email LIKE '%@lortu.eus'"; tituloReporte = "13. Cuentas de Correo Corporativas"; break;
-            case 14: consultaSql = "SELECT * FROM inscripciones WHERE fecha_reserva = CURRENT_DATE"; tituloReporte = "14. Registro de Matriculaciones de Hoy"; break;
-            case 15: consultaSql = "SELECT u.nombre, c.nombre FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso WHERE i.nota_final IS NULL"; tituloReporte = "15. Pendientes de Calificar (Actas abiertas)"; break;
+            case 13: consultaSql = "SELECT u.nombre AS Alumno, COUNT(i.id_curso) AS Cursos_Activos, SUM(c.horas) AS Horas_Totales FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso GROUP BY u.id_usuario, u.nombre HAVING Cursos_Activos > 1 ORDER BY Horas_Totales DESC"; tituloReporte = "13. Análisis de Intensidad: Alumnos con Multimatrícula y Carga Horaria"; break;
+            case 14: consultaSql = "SELECT u.nombre AS Alumno, c.nombre AS Curso, i.fecha_reserva FROM inscripciones i JOIN usuarios u ON i.id_usuario = u.id_usuario JOIN cursos c ON i.id_curso = c.id_curso WHERE i.fecha_reserva = CURRENT_DATE"; tituloReporte = "14. Registro de Matriculaciones de Hoy"; break;
+            case 15: consultaSql = "SELECT u.nombre AS Alumno, c.nombre AS Curso FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso WHERE i.nota_final IS NULL"; tituloReporte = "15. Pendientes de Calificar (Actas abiertas)"; break;
             case 16: consultaSql = "SELECT c.nombre FROM cursos c JOIN aulas a ON c.id_aula = a.id_aula WHERE a.nombre = 'Aula 101'"; tituloReporte = "16. Agenda Académica: Aula 101"; break;
-            case 17: consultaSql = "SELECT u.nombre as Alumno, c.nombre as Curso, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso"; tituloReporte = "17. Historial Académico Completo"; break;
-            case 18: consultaSql = "SELECT COUNT(*) as total FROM inscripciones"; tituloReporte = "18. Volumen Total de Reservas Global"; break;
+            case 17: consultaSql = "SELECT u.nombre AS Alumno, c.nombre AS Curso, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso"; tituloReporte = "17. Historial Académico Completo"; break;
+            case 18: consultaSql = "SELECT u.nombre AS Alumno, COUNT(i.id_inscripcion) AS total_cursos FROM usuarios u LEFT JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE u.rol = 'alumno' GROUP BY u.id_usuario, u.nombre"; tituloReporte = "18. Volumen de Reservas por Alumno"; break;
             case 19: consultaSql = "SELECT c.nombre, COUNT(i.id_inscripcion) AS total_inscritos, COALESCE(AVG(i.nota_final), 0) AS nota_media, COALESCE(MAX(i.fecha_reserva), 'Sin actividad') AS ultima_reserva FROM cursos c LEFT JOIN inscripciones i ON c.id_curso = i.id_curso GROUP BY c.id_curso, c.nombre ORDER BY total_inscritos DESC"; tituloReporte = "19. Análisis de Rendimiento y Ocupación por Curso"; break;
             case 20: consultaSql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final IS NOT NULL ORDER BY i.nota_final DESC"; tituloReporte = "20. Ranking Global de Calificaciones"; break;
             
             // --- NUEVO CASO 21: BUZÓN DE CONTACTO ---
-            case 21: 
+            case 22: 
                 consultaSql = "SELECT nombre, email, asunto, mensaje, fecha_envio FROM mensajes_contacto ORDER BY fecha_envio DESC"; 
                 tituloReporte = "21. Buzón de Mensajes de Contacto (Atención al Cliente)"; 
                 break;
