@@ -7,6 +7,7 @@
     
     <link rel="stylesheet" href="/css/stylescursoswp.css">
     <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav>
@@ -23,7 +24,7 @@
     <main class="admin-container">
         <header class="admin-header">
             <h1>Panel de Control de Amazon Web Services</h1>
-            <p>Conexión activa con la base de datos distribuida <strong>lortu_db</strong>. Seleccione un informe de gestión técnica.</p>
+            <p>Conexión activa con la base de datos distribuida <strong>lortu_db</strong> en Amazon RDS. Seleccione un informe de gestión técnica.</p>
         </header>
 
         <section class="admin-grid">
@@ -32,51 +33,55 @@
             <a href="/admin/consulta/3" class="btn-query">3. Gestión de Infraestructura: Aulas</a>
             <a href="/admin/consulta/4" class="btn-query">4. Administradores del Sistema</a>
 
-            <a href="/admin/consulta/5" class="btn-query">5. Cursos de Larga Duración (Mas de 80 horas)</a>
+            <a href="/admin/consulta/5" class="btn-query">5. Cursos de Larga Duración (+60h)</a>
             <a href="/admin/consulta/6" class="btn-query">6. Cursos con Subvención Activa</a>
             <a href="/admin/consulta/7" class="btn-query">7. Inscripciones Confirmadas</a>
-            <a href="/admin/consulta/8" class="btn-query">8. Cuadro de Honor: Alumnos de Excelencia</a>
+            <a href="/admin/consulta/8" class="btn-query">8. Cuadro de Honor (Notas > 8)</a>
 
             <a href="/admin/consulta/9" class="btn-query">9. Ocupación Actual por Curso</a>
-            <a href="/admin/consulta/10" class="btn-query">10. Ubicación Física (Asignación Curso y Aula)</a>
-            <a href="/admin/consulta/11" class="btn-query">11. Promedio de Horas Lectivas del Centro</a>
-            <a href="/admin/consulta/12" class="btn-query">12. Capacidad Total Instalada (Aforo)</a>
+            <a href="/admin/consulta/10" class="btn-query">10. Ubicación Física (Curso/Aula)</a>
+            <a href="/admin/consulta/11" class="btn-query">11. Promedio de Horas Lectivas</a>
+            <a href="/admin/consulta/12" class="btn-query">12. Capacidad Total (Aforo)</a>
 
             <a href="/admin/consulta/13" class="btn-query">13. Cuentas de Correo Corporativas</a>
-            <a href="/admin/consulta/14" class="btn-query">14. Registro de Matriculaciones de Hoy</a>
-            <a href="/admin/consulta/15" class="btn-query">15. Pendientes de Calificar (Actas abiertas)</a>
+            <a href="/admin/consulta/14" class="btn-query">14. Matriculaciones Realizadas Hoy</a>
+            <a href="/admin/consulta/15" class="btn-query">15. Pendientes de Calificar</a>
             <a href="/admin/consulta/16" class="btn-query">16. Agenda Académica: Aula 101</a>
 
             <a href="/admin/consulta/17" class="btn-query">17. Historial Académico Completo</a>
-            <a href="/admin/consulta/18" class="btn-query">18. Volumen Total de Reservas Global</a>
-            <a href="/admin/consulta/19" class="btn-query">19. Oferta de Grupos Reducidos (Menos de 15 plazas)</a>
+            <a href="/admin/consulta/18" class="btn-query">18. Volumen Total de Reservas</a>
+            <a href="/admin/consulta/19" class="btn-query">19. Ranking Popularidad y Actividad</a>
             <a href="/admin/consulta/20" class="btn-query">20. Ranking Global de Calificaciones</a>
+            
+            <a href="/admin/consulta/21" class="btn-query" style="background: #28a745; color: white; border-color: #1e7e34;">
+                21. 📩 Buzón de Mensajes (Contacto)
+            </a>
         </section>
 
         <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ccc;">
 
-        <section class="admin-management" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 50px;">
+        <section class="admin-management" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 50px;">
             
             <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #ffa500;">
-                <h2 style="margin-top: 0; color: #333;">🔎 Consulta Variable</h2>
-                <p style="color: #666; font-size: 0.9em;">Visualice los alumnos inscritos en tiempo real desde la base de datos.</p>
+                <h2 style="margin-top: 0; color: #333;">🔎 Consulta de Alumnos</h2>
+                <p style="color: #666; font-size: 0.9em;">Visualice los alumnos inscritos en tiempo real seleccionando un curso específico.</p>
                 
                 <form action="/admin/alumnos_curso" method="get" style="display: flex; flex-direction: column; gap: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Seleccionar Curso Específico:</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Seleccionar Curso:</label>
                         <select name="id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: white;">
                             {{OPCIONES_CURSOS}}
                         </select>
                     </div>
-                    <button type="submit" class="btn-query" style="background: #ffa500; color: white; border: none; cursor: pointer; transition: 0.3s; padding: 10px; border-radius: 5px;">
-                        Consultar Listado de Alumnos
+                    <button type="submit" class="btn-query" style="background: #ffa500; color: white; border: none; cursor: pointer; padding: 12px; border-radius: 5px; font-weight: bold;">
+                        Consultar Listado en RDS
                     </button>
                 </form>
             </div>
 
             <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #007bff;">
                 <h2 style="margin-top: 0; color: #333;">⚙️ Modificar Parámetros</h2>
-                <p style="color: #666; font-size: 0.9em;">Actualice la disponibilidad de plazas y horas totales en el sistema.</p>
+                <p style="color: #666; font-size: 0.9em;">Actualice la disponibilidad de plazas y horas totales directamente en el servidor.</p>
                 
                 <form action="/admin/actualizar_curso" method="post" style="display: flex; flex-direction: column; gap: 10px;">
                     <div>
@@ -88,19 +93,34 @@
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Nuevas Plazas Máximas:</label>
-                            <input type="number" name="plazas" placeholder="Ejemplo: 30" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Nuevas Plazas:</label>
+                            <input type="number" name="plazas" placeholder="30" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Nuevas Horas Totales:</label>
-                            <input type="number" name="horas" placeholder="Ejemplo: 120" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em;">Nuevas Horas:</label>
+                            <input type="number" name="horas" placeholder="120" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn-query" style="background: #007bff; color: white; border: none; cursor: pointer; margin-top: 5px; padding: 10px; border-radius: 5px;">
-                        Actualizar en Amazon Web Services RDS
+                    <button type="submit" class="btn-query" style="background: #007bff; color: white; border: none; cursor: pointer; margin-top: 10px; padding: 12px; border-radius: 5px; font-weight: bold;">
+                        Actualizar en AWS RDS
                     </button>
                 </form>
+            </div>
+
+            <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #28a745;">
+                <h2 style="margin-top: 0; color: #333;">📩 Atención al Cliente</h2>
+                <p style="color: #666; font-size: 0.9em;">Revise los mensajes, dudas y sugerencias enviados por los usuarios a través de la plataforma.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">
+                        <span style="font-size: 0.85em; font-weight: bold; color: #28a745;">ESTADO DEL BUZÓN:</span>
+                        <p style="margin: 5px 0; font-size: 0.9em;">Conexión síncrona con la tabla <strong>mensajes_contacto</strong>.</p>
+                    </div>
+                    <a href="/admin/consulta/21" class="btn-query" style="background: #28a745; color: white; border: none; text-align: center; text-decoration: none; padding: 12px; border-radius: 5px; font-weight: bold; display: block;">
+                        Abrir Bandeja de Entrada
+                    </a>
+                </div>
             </div>
 
         </section>
@@ -108,7 +128,7 @@
 
     <footer>
         <div class="footer-content">
-            <p>© 2026 LORTU - Sistema de Gestión de Formación Sincronizado con Amazon Web Services</p>
+            <p>© 2026 LORTU.</p>
         </div>
     </footer>
 </body>
