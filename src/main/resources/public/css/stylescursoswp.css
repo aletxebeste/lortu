@@ -253,47 +253,68 @@ nav {
 }
 
 /* 7. FOOTER */
-footer {
-    background: #1a1a1a;
-    color: white;
-    padding: 4rem 5% 2rem;
-    width: 100%; /* Asegura que ocupe todo el ancho */
-    clear: both;
-}
+/* Footer más compacto y centrado */
+    footer {
+      background: #1a1a1a;
+      color: white;
+      /* Bajamos el padding superior de 5rem a 2.5rem */
+      padding: 2.5rem 5% 1.5rem; 
+    }
 
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 3rem;
-    max-width: 1400px;
-    margin: 0 auto 3rem;
-}
+    .footer-content {
+      display: grid;
+      /* Columnas un poco más estrechas */
+      grid-template-columns: repeat(auto-fit, minmax(140px, 200px)); 
+      gap: 1.5rem; /* Reducimos el espacio entre columnas a la mitad */
+      max-width: 1000px; 
+      margin: 0 auto 2rem;
+      justify-content: center; 
+    }
 
-.footer-section h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
+    .footer-section {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.footer-section a {
-    display: block;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    margin-bottom: 0.5rem;
-    transition: color 0.3s;
-}
+    .footer-section h4 {
+      font-size: 1rem; /* Un pelín más pequeña */
+      font-weight: 700;
+      margin-bottom: 0.8rem; /* Menos espacio debajo del título */
+      color: #ffffff;
+    }
 
-.footer-section a:hover {
-    color: white;
-}
+    /* Línea decorativa más discreta */
+    .footer-section h4::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: #667eea;
+      margin: 5px auto 0;
+    }
 
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-}
+    .footer-section a {
+      display: block;
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      margin-bottom: 0.4rem; /* Enlaces más juntos */
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .footer-section a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.8rem;
+    }
 
 /* 8. RESPONSIVE */
 @media (max-width: 768px) {
