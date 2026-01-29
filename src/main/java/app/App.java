@@ -360,7 +360,7 @@ public class App {
             case 20: consultaSql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final IS NOT NULL ORDER BY i.nota_final DESC"; tituloReporte = "20. Ranking Global de Calificaciones"; break;
             
             // --- NUEVO CASO 21: BUZÓN DE CONTACTO ---
-            case 22: 
+            case 21: 
                 consultaSql = "SELECT nombre, email, asunto, mensaje, fecha_envio FROM mensajes_contacto ORDER BY fecha_envio DESC"; 
                 tituloReporte = "21. Buzón de Mensajes de Contacto (Atención al Cliente)"; 
                 break;
