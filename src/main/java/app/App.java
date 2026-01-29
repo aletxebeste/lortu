@@ -16,14 +16,14 @@ public class App {
     private static final String DB_PASS = obtenerPassword();
 
     /**
-     * Carga la contraseña desde el archivo local db.properties
+     * Carga la contraseña desde el archivo local db.properties o variable de entorno
      */
     private static String obtenerPassword() {
-        Properties prop = new Properties();
-        try (FileInputStream fis = new FileInputStream("db.properties")) {
-            prop.load(fis);
-            String pass = prop.getProperty("db.password");
-            if (pass != null) return pass;
+        Properties propiedades = new Properties();
+        try (FileInputStream entradaArchivo = new FileInputStream("db.properties")) {
+            propiedades.load(entradaArchivo);
+            String contrasena = propiedades.getProperty("db.password");
+            if (contrasena != null) return contrasena;
         } catch (IOException e) {
             System.out.println("⚠️ ALERTA: No se pudo leer db.properties localmente.");
         }
@@ -42,72 +42,63 @@ public class App {
             return null;
         });
 
-        // Ruta para el Catálogo de Cursos (Dinámica)
+        // Ruta para el Catálogo de Cursos (Dinámica con Nombres, Horas y Plazas)
         get("/html/cursoswp.html", (req, res) -> {
-            String path = "src/main/resources/public/html/cursos_plantilla.html";
+            String rutaArchivo = "src/main/resources/public/html/cursos_plantilla.html";
             try {
-                byte[] bytes = Files.readAllBytes(Paths.get(path));
-                String contenidoHtml = new String(bytes, "UTF-8");
+                byte[] bytesArchivo = Files.readAllBytes(Paths.get(rutaArchivo));
+                String contenidoHtml = new String(bytesArchivo, "UTF-8");
 
-                try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+                try (Connection conexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
                     for (int i = 1; i <= 4; i++) {
-                        int maxPlazas = obtenerPlazasMax(conn, i);
-                        int inscritos = obtenerContadorInscritos(conn, i);
-                        int disponibles = maxPlazas - inscritos;
+                        String nombreCurso = obtenerNombreCurso(conexion, i);
+                        int horasCurso = obtenerHorasCurso(conexion, i);
+                        int maximoPlazas = obtenerPlazasMax(conexion, i);
+                        int alumnosInscritos = obtenerContadorInscritos(conexion, i);
+                        int plazasDisponibles = maximoPlazas - alumnosInscritos;
                         
-                        contenidoHtml = contenidoHtml.replace("TOTAL_" + i, String.valueOf(maxPlazas));
-                        contenidoHtml = contenidoHtml.replace("DISPONIBLES_" + i, String.valueOf(disponibles));
+                        contenidoHtml = contenidoHtml.replace("NOMBRE_" + i, nombreCurso);
+                        contenidoHtml = contenidoHtml.replace("HORAS_" + i, String.valueOf(horasCurso));
+                        contenidoHtml = contenidoHtml.replace("TOTAL_" + i, String.valueOf(maximoPlazas));
+                        contenidoHtml = contenidoHtml.replace("DISPONIBLES_" + i, String.valueOf(plazasDisponibles));
                     }
                 }
-
                 res.type("text/html; charset=UTF-8");
                 return contenidoHtml;
             } catch (Exception e) {
                 res.status(500);
-                return "Error crítico al cargar el catálogo: " + e.getMessage();
+                return "Error crítico al cargar el catálogo dinámico: " + e.getMessage();
             }
         });
 
-        // RUTA MODIFICADA: Panel de Administración Dinámico
-        // Ahora busca el archivo directamente en src/main/resources/admin.html
+        // Panel de Administración Dinámico
         get("/html/admin.html", (req, res) -> {
-            // HEMOS CAMBIADO ESTA RUTA PARA QUE COINCIDA CON EL MOVIMIENTO DEL ARCHIVO
-            String path = "src/main/resources/admin.html"; 
+            String rutaArchivo = "src/main/resources/admin.html"; 
             try {
-                byte[] bytes = Files.readAllBytes(Paths.get(path));
-                String contenidoHtml = new String(bytes, "UTF-8");
-
-                // Generamos el HTML de las opciones de los cursos desde AWS
-                String opcionesCursos = obtenerHtmlOpcionesCursos();
-
-                // Reemplazamos el marcador dinámico por la lista de cursos de la BD
-                contenidoHtml = contenidoHtml.replace("{{OPCIONES_CURSOS}}", opcionesCursos);
-
+                byte[] bytesArchivo = Files.readAllBytes(Paths.get(rutaArchivo));
+                String contenidoHtml = new String(bytesArchivo, "UTF-8");
+                contenidoHtml = contenidoHtml.replace("{{OPCIONES_CURSOS}}", obtenerHtmlOpcionesCursos());
                 res.type("text/html; charset=UTF-8");
                 return contenidoHtml;
             } catch (Exception e) {
                 res.status(500);
-                return "Error al procesar el panel de administración: " + e.getMessage() + 
-                       " (Buscando en: " + Paths.get(path).toAbsolutePath() + ")";
+                return "Error al procesar el panel de administración: " + e.getMessage();
             }
         });
 
         // --- 3. PROCESOS DE USUARIO (LOGIN, REGISTRO, INSCRIPCIÓN) ---
 
         post("/login", (req, res) -> {
-            String correo = req.queryParams("email");
-            String clave = req.queryParams("password");
-            Usuario user = validarUsuario(correo, clave);
+            String correoUsuario = req.queryParams("email");
+            String claveUsuario = req.queryParams("password");
+            Usuario objetoUsuario = validarUsuario(correoUsuario, claveUsuario);
 
-            if (user == null) {
+            if (objetoUsuario == null) {
                 res.status(401); 
-                return "<html><head><meta charset='UTF-8'></head><body style='font-family:sans-serif; text-align:center; padding-top:50px;'>" +
-                       "<h1 style='color:red;'>Acceso Denegado</h1>" +
-                       "<p>Correo o contraseña incorrectos.</p>" +
-                       "<a href='/html/login.html'>Volver a intentar</a></body></html>";
+                return "<html><body><h1>Acceso Denegado</h1><p>Correo o contraseña incorrectos.</p><a href='/html/login.html'>Volver</a></body></html>";
             }
 
-            if (user.getRol().equalsIgnoreCase("admin")) {
+            if (objetoUsuario.getRol().equalsIgnoreCase("admin")) {
                 res.redirect("/html/admin.html");
             } else {
                 res.redirect("/html/index.html");
@@ -118,11 +109,11 @@ public class App {
         post("/registro", (req, res) -> {
             String nombre = req.queryParams("nombre");
             String email = req.queryParams("email");
-            String pass = req.queryParams("password");
-            if (registrarUsuario(nombre, email, pass)) {
+            String password = req.queryParams("password");
+            if (registrarUsuario(nombre, email, password)) {
                 res.redirect("/html/login.html");
             } else {
-                return "<h1>Error</h1><p>Email en uso.</p><a href='/html/registro.html'>Volver</a>";
+                return "<h1>Error</h1><p>El email ya está en uso.</p><a href='/html/registro.html'>Volver</a>";
             }
             return null;
         });
@@ -130,130 +121,88 @@ public class App {
         post("/inscribir", (req, res) -> {
             String email = req.queryParams("email");
             int idCurso = Integer.parseInt(req.queryParams("id_curso"));
-
-            if (!existeUsuario(email)) {
-                res.type("text/html; charset=UTF-8");
-                return "<html><body><h1 style='color:orange;'>Usuario no encontrado</h1>" +
-                       "<p>El email <b>" + email + "</b> no está registrado en LORTU.</p>" +
-                       "<a href='/html/registro.html'>Ir a Registro</a></body></html>";
-            }
-
             if (inscribirAlumno(email, idCurso)) {
-                res.type("text/html; charset=UTF-8");
                 return "<body><h1 style='color:green;'>Inscripción Exitosa</h1><a href='/html/index.html'>Volver</a></body>";
             } else {
-                return "<h1>Error</h1><p>Hubo un problema al procesar tu inscripción.</p>";
+                return "<h1>Error</h1><p>Hubo un problema al procesar tu inscripción en AWS.</p>";
             }
         });
 
         // --- 4. RUTAS DE ADMINISTRACIÓN INTERACTIVA ---
 
         get("/admin/alumnos_curso", (req, res) -> {
-            String idCurso = req.queryParams("id");
-            if (idCurso == null || idCurso.isEmpty()) return "ID de curso no proporcionado.";
+            String idDelCurso = req.queryParams("id");
+            StringBuilder constructorHtml = new StringBuilder("<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><link rel='stylesheet' href='/css/admin.css'></head><body><div class='admin-container' style='padding:50px;'><h1>Alumnos inscritos en el curso seleccionado:</h1><table border='1' style='width:100%; border-collapse:collapse;'>");
+            constructorHtml.append("<tr style='background:#ffa500; color:white;'><th>Nombre Alumno</th><th>Email</th></tr>");
 
-            StringBuilder html = new StringBuilder("<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><link rel='stylesheet' href='/css/admin.css'></head><body>");
-            html.append("<div class='admin-container' style='padding:50px;'><h1>Alumnos inscritos en Curso seleccionado:</h1>");
-            html.append("<table border='1' style='width:100%; border-collapse:collapse;'><tr style='background:#ffa500; color:white;'><th>Nombre Alumno</th><th>Email</th></tr>");
+            String consultaSql = "SELECT u.nombre, u.email FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.id_curso = ?";
 
-            String sql = "SELECT u.nombre, u.email FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.id_curso = ?";
-
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, Integer.parseInt(idCurso));
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        html.append("<tr><td style='padding:10px;'>").append(rs.getString("nombre"))
-                            .append("</td><td style='padding:10px;'>").append(rs.getString("email")).append("</td></tr>");
+            try (Connection conexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                 PreparedStatement sentencia = conexion.prepareStatement(consultaSql)) {
+                sentencia.setInt(1, Integer.parseInt(idDelCurso));
+                try (ResultSet resultado = sentencia.executeQuery()) {
+                    while (resultado.next()) {
+                        constructorHtml.append("<tr><td style='padding:10px;'>").append(resultado.getString("nombre"))
+                            .append("</td><td style='padding:10px;'>").append(resultado.getString("email")).append("</td></tr>");
                     }
                 }
             } catch (SQLException e) { return "Error SQL: " + e.getMessage(); }
 
-            html.append("</table><br><a href='/html/admin.html' style='padding:10px; background:#333; color:white; text-decoration:none;'>Volver al Panel</a></div></body></html>");
+            constructorHtml.append("</table><br><a href='/html/admin.html'>Volver al Panel</a></div></body></html>");
             res.type("text/html; charset=UTF-8");
-            return html.toString();
+            return constructorHtml.toString();
         });
 
         post("/admin/actualizar_curso", (req, res) -> {
-            int id = Integer.parseInt(req.queryParams("id"));
-            int plazas = Integer.parseInt(req.queryParams("plazas"));
-            int horas = Integer.parseInt(req.queryParams("horas"));
+            int identificador = Integer.parseInt(req.queryParams("id"));
+            int nuevasPlazas = Integer.parseInt(req.queryParams("plazas"));
+            int nuevasHoras = Integer.parseInt(req.queryParams("horas"));
+            String sentenciaSql = "UPDATE cursos SET plazas_max = ?, horas = ? WHERE id_curso = ?";
 
-            String sql = "UPDATE cursos SET plazas_max = ?, horas = ? WHERE id_curso = ?";
-
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, plazas);
-                ps.setInt(2, horas);
-                ps.setInt(3, id);
-                
-                int actualizados = ps.executeUpdate();
-                res.type("text/html; charset=UTF-8");
-                if (actualizados > 0) {
-                    return "<html><body><h2 style='color:green;'>✅ Base de Datos AWS Actualizada</h2><p>Los cambios se han aplicado correctamente.</p><a href='/html/admin.html'>Volver al Panel</a></body></html>";
-                } else {
-                    return "<h2>❌ No se pudo actualizar el curso</h2><a href='/html/admin.html'>Volver</a>";
-                }
+            try (Connection conexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                 PreparedStatement sentencia = conexion.prepareStatement(sentenciaSql)) {
+                sentencia.setInt(1, nuevasPlazas);
+                sentencia.setInt(2, nuevasHoras);
+                sentencia.setInt(3, identificador);
+                sentencia.executeUpdate();
+                return "<html><body><h2 style='color:green;'>✅ Base de Datos AWS Actualizada</h2><a href='/html/admin.html'>Volver al Panel</a></body></html>";
             } catch (SQLException e) { return "Error al conectar con AWS: " + e.getMessage(); }
         });
 
-        // --- 5. RUTA INFORMES ADMIN (LOS 20 INFORMES FIJOS) ---
         get("/admin/consulta/:id", (req, res) -> {
-            int idConsulta = Integer.parseInt(req.params(":id"));
+            int idDeLaConsulta = Integer.parseInt(req.params(":id"));
             res.type("text/html; charset=UTF-8"); 
-            return ejecutarConsultaAdmin(idConsulta);
+            return ejecutarConsultaAdmin(idDeLaConsulta);
         });
     }
 
-    // --- 6. MÉTODOS DE APOYO Y ACCESO A DATOS (JDBC) ---
+    // --- 5. MÉTODOS DE APOYO JDBC ---
 
-    private static String obtenerHtmlOpcionesCursos() {
-        StringBuilder opciones = new StringBuilder();
-        String sql = "SELECT id_curso, nombre FROM cursos ORDER BY nombre ASC";
-        
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                int id = rs.getInt("id_curso");
-                String nombre = rs.getString("nombre");
-                opciones.append("<option value='").append(id).append("'>")
-                        .append(nombre).append("</option>");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "<option>Error al cargar cursos de AWS</option>";
-        }
-        return opciones.toString();
-    }
-
-    private static boolean existeUsuario(String email) {
-        String sql = "SELECT COUNT(*) AS total FROM usuarios WHERE email = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt("total") > 0;
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return false;
-    }
-
-    private static int obtenerContadorInscritos(Connection conn, int idCurso) {
-        String sql = "SELECT COUNT(*) AS total FROM inscripciones WHERE id_curso = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    private static String obtenerNombreCurso(Connection conexion, int idCurso) {
+        String sql = "SELECT nombre FROM cursos WHERE id_curso = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idCurso);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt("total");
+                if (rs.next()) return rs.getString("nombre");
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return "Curso No Definido";
+    }
+
+    private static int obtenerHorasCurso(Connection conexion, int idCurso) {
+        String sql = "SELECT horas FROM cursos WHERE id_curso = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCurso);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("horas");
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
 
-    private static int obtenerPlazasMax(Connection conn, int idCurso) {
+    private static int obtenerPlazasMax(Connection conexion, int idCurso) {
         String sql = "SELECT plazas_max FROM cursos WHERE id_curso = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idCurso);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return rs.getInt("plazas_max");
@@ -262,93 +211,158 @@ public class App {
         return 0;
     }
 
+    private static int obtenerContadorInscritos(Connection conexion, int idCurso) {
+        String sql = "SELECT COUNT(*) FROM inscripciones WHERE id_curso = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCurso);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    private static String obtenerHtmlOpcionesCursos() {
+        StringBuilder opciones = new StringBuilder();
+        try (Connection conexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             Statement estado = conexion.createStatement();
+             ResultSet resultado = estado.executeQuery("SELECT id_curso, nombre FROM cursos ORDER BY nombre")) {
+            while (resultado.next()) {
+                opciones.append("<option value='").append(resultado.getInt("id_curso")).append("'>")
+                        .append(resultado.getString("nombre")).append("</option>");
+            }
+        } catch (SQLException e) { return "<option>Error al cargar de AWS</option>"; }
+        return opciones.toString();
+    }
+
     private static Usuario validarUsuario(String email, String pass) {
         String sql = "SELECT id_usuario, nombre, email, password, rol FROM usuarios WHERE email = ? AND password = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, pass);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new Usuario(rs.getInt("id_usuario"), rs.getString("nombre"), rs.getString("email"), rs.getString("password"), rs.getString("rol"));
-                }
+                if (rs.next()) return new Usuario(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return null;
     }
 
-    private static boolean registrarUsuario(String nombre, String email, String pass) {
+    private static boolean registrarUsuario(String n, String e, String p) {
         String sql = "INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, 'alumno')";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, nombre);
-            ps.setString(2, email);
-            ps.setString(3, pass);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); return false; }
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, n); ps.setString(2, e); ps.setString(3, p); return ps.executeUpdate() > 0;
+        } catch (Exception ex) { return false; }
     }
 
-    private static boolean inscribirAlumno(String emailAlumno, int idCurso) {
-        String sql = "INSERT INTO inscripciones (id_usuario, id_curso, fecha_reserva, estado) " +
-                     "VALUES ((SELECT id_usuario FROM usuarios WHERE email = ?), ?, CURRENT_DATE, 'Confirmada')";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, emailAlumno);
-            ps.setInt(2, idCurso);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); return false; }
+    private static boolean inscribirAlumno(String email, int idC) {
+        String sql = "INSERT INTO inscripciones (id_usuario, id_curso, fecha_reserva, estado) VALUES ((SELECT id_usuario FROM usuarios WHERE email = ?), ?, CURRENT_DATE, 'Confirmada')";
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email); ps.setInt(2, idC); return ps.executeUpdate() > 0;
+        } catch (Exception ex) { return false; }
     }
 
-    // --- 7. MOTOR DE INFORMES ADMIN (SWITCH) ---
+    private static boolean existeUsuario(String email) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS); PreparedStatement ps = con.prepareStatement("SELECT id_usuario FROM usuarios WHERE email = ?")) {
+            ps.setString(1, email); return ps.executeQuery().next();
+        } catch (Exception ex) { return false; }
+    }
 
-    private static String ejecutarConsultaAdmin(int num) {
-        String sql = "";
-        String titulo = "";
+    // --- 6. MOTOR DE INFORMES SINCRONIZADO CON LOS BOTONES DEL HTML ---
+
+    private static String ejecutarConsultaAdmin(int numeroConsulta) {
+        String consultaSql = "";
+        String tituloReporte = "";
         
-        switch(num) {
-            case 1: sql = "SELECT nombre, email FROM usuarios WHERE rol = 'alumno'"; titulo = "Lista de Alumnos"; break;
-            case 2: sql = "SELECT nombre, horas, plazas_max FROM cursos"; titulo = "Catálogo de Cursos"; break;
-            case 3: sql = "SELECT * FROM aulas"; titulo = "Infraestructura: Aulas"; break;
-            case 4: sql = "SELECT nombre, email FROM usuarios WHERE rol = 'admin'"; titulo = "Equipo de Administración"; break;
-            case 5: sql = "SELECT nombre, horas FROM cursos WHERE horas > 80"; titulo = "Cursos Intensivos (>80h)"; break;
-            case 6: sql = "SELECT nombre FROM cursos WHERE subvencionado = 1"; titulo = "Cursos Subvencionados"; break;
-            case 7: sql = "SELECT * FROM inscripciones WHERE estado = 'Confirmada'"; titulo = "Inscripciones Validadas"; break;
-            case 8: sql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final > 8"; titulo = "Alumnos de Excelencia"; break;
-            case 9: sql = "SELECT c.nombre, COUNT(i.id_usuario) as inscritos FROM cursos c LEFT JOIN inscripciones i ON c.id_curso = i.id_curso GROUP BY c.nombre"; titulo = "Ocupación por Curso"; break;
-            case 10: sql = "SELECT c.nombre as Curso, a.nombre as Aula FROM cursos c JOIN aulas a ON c.id_aula = a.id_aula"; titulo = "Ubicación de Cursos"; break;
-            case 11: sql = "SELECT AVG(horas) as Media FROM cursos"; titulo = "Promedio de Horas Lectivas"; break;
-            case 12: sql = "SELECT SUM(capacidad) as Total FROM aulas"; titulo = "Capacidad Total Instalada"; break;
-            case 13: sql = "SELECT nombre, email FROM usuarios WHERE email LIKE '%@lortu.eus'"; titulo = "Cuentas Corporativas"; break;
-            case 14: sql = "SELECT * FROM inscripciones WHERE fecha_reserva = CURRENT_DATE"; titulo = "Actividad de Hoy"; break;
-            case 15: sql = "SELECT u.nombre, c.nombre FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso WHERE i.nota_final IS NULL"; titulo = "Pendientes de Calificar"; break;
-            case 16: sql = "SELECT c.nombre FROM cursos c JOIN aulas a ON c.id_aula = a.id_aula WHERE a.nombre = 'Aula 101'"; titulo = "Agenda Aula 101"; break;
-            case 17: sql = "SELECT u.nombre as Alumno, c.nombre as Curso, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso"; titulo = "Registro Histórico Full"; break;
-            case 18: sql = "SELECT COUNT(*) as Total FROM inscripciones"; titulo = "Volumen Total de Reservas"; break;
-            case 19: sql = "SELECT nombre, plazas_max FROM cursos WHERE plazas_max < 15"; titulo = "Cursos de Grupo Reducido"; break;
-            case 20: sql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final IS NOT NULL ORDER BY i.nota_final DESC"; titulo = "Ranking de Calificaciones"; break;
-            default: return "<html><body><h1>Error</h1></body></html>";
+        switch(numeroConsulta) {
+            case 1: 
+                consultaSql = "SELECT nombre, email FROM usuarios WHERE rol = 'alumno'"; 
+                tituloReporte = "1. Listado Oficial de Alumnos"; break;
+            case 2: 
+                consultaSql = "SELECT nombre, horas, plazas_max FROM cursos"; 
+                tituloReporte = "2. Catálogo Vigente de Cursos"; break;
+            case 3: 
+                consultaSql = "SELECT * FROM aulas"; 
+                tituloReporte = "3. Gestión de Infraestructura: Aulas"; break;
+            case 4: 
+                consultaSql = "SELECT nombre, email FROM usuarios WHERE rol = 'admin'"; 
+                tituloReporte = "4. Administradores del Sistema"; break;
+            case 5: 
+                consultaSql = "SELECT nombre, horas FROM cursos WHERE horas > 80"; 
+                tituloReporte = "5. Cursos de Larga Duración (Mas de 80 horas)"; break;
+            case 6: 
+                consultaSql = "SELECT nombre, horas FROM cursos WHERE subvencionado = 1"; 
+                tituloReporte = "6. Cursos con Subvención Activa"; break;
+            case 7: 
+                consultaSql = "SELECT * FROM inscripciones WHERE estado = 'Confirmada'"; 
+                tituloReporte = "7. Inscripciones Confirmadas"; break;
+            case 8: 
+                consultaSql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final > 8"; 
+                tituloReporte = "8. Cuadro de Honor: Alumnos de Excelencia"; break;
+            case 9: 
+                consultaSql = "SELECT c.nombre, COUNT(i.id_usuario) as inscritos FROM cursos c LEFT JOIN inscripciones i ON c.id_curso = i.id_curso GROUP BY c.id_curso"; 
+                tituloReporte = "9. Ocupación Actual por Curso"; break;
+            case 10: 
+                consultaSql = "SELECT c.nombre as Curso, a.nombre as Aula FROM cursos c JOIN aulas a ON c.id_aula = a.id_aula"; 
+                tituloReporte = "10. Ubicación Física (Asignación Curso y Aula)"; break;
+            case 11: 
+                consultaSql = "SELECT AVG(horas) as promedio_horas FROM cursos"; 
+                tituloReporte = "11. Promedio de Horas Lectivas del Centro"; break;
+            case 12: 
+                consultaSql = "SELECT SUM(capacidad) as capacidad_total FROM aulas"; 
+                tituloReporte = "12. Capacidad Total Instalada (Aforo)"; break;
+            case 13: 
+                consultaSql = "SELECT nombre, email FROM usuarios WHERE email LIKE '%@lortu.eus'"; 
+                tituloReporte = "13. Cuentas de Correo Corporativas"; break;
+            case 14: 
+                consultaSql = "SELECT * FROM inscripciones WHERE fecha_reserva = CURRENT_DATE"; 
+                tituloReporte = "14. Registro de Actividad de Hoy"; break;
+            case 15: 
+                consultaSql = "SELECT u.nombre, c.nombre FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso WHERE i.nota_final IS NULL"; 
+                tituloReporte = "15. Pendientes de Calificar (Actas abiertas)"; break;
+            case 16: 
+                consultaSql = "SELECT c.nombre FROM cursos c JOIN aulas a ON c.id_aula = a.id_aula WHERE a.nombre = 'Aula 101'"; 
+                tituloReporte = "16. Agenda Académica: Aula 101"; break;
+            case 17: 
+                consultaSql = "SELECT u.nombre as Alumno, c.nombre as Curso, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario JOIN cursos c ON i.id_curso = c.id_curso"; 
+                tituloReporte = "17. Historial Académico Completo"; break;
+            case 18: 
+                consultaSql = "SELECT COUNT(*) as total FROM inscripciones"; 
+                tituloReporte = "18. Volumen Total de Reservas Global"; break;
+            case 19: 
+                consultaSql = "SELECT nombre, plazas_max FROM cursos WHERE plazas_max < 15"; 
+                tituloReporte = "19. Oferta de Grupos Reducidos (Menos de 15 plazas)"; break;
+            case 20: 
+                consultaSql = "SELECT u.nombre, i.nota_final FROM usuarios u JOIN inscripciones i ON u.id_usuario = i.id_usuario WHERE i.nota_final IS NOT NULL ORDER BY i.nota_final DESC"; 
+                tituloReporte = "20. Ranking Global de Calificaciones"; break;
+            default: return "<h1>Error en la selección del informe</h1>";
         }
 
-        StringBuilder html = new StringBuilder();
-        html.append("<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><link rel='stylesheet' href='/css/admin.css'></head><body>");
-        html.append("<div class='admin-container' style='padding:50px;'><h1>").append(titulo).append("</h1><table border='1' style='width:100%; border-collapse:collapse;'>");
+        StringBuilder constructorTabla = new StringBuilder("<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><link rel='stylesheet' href='/css/admin.css'></head><body><div class='admin-container' style='padding:50px;'><h1>").append(tituloReporte).append("</h1><table border='1' style='width:100%; border-collapse:collapse;'>");
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int col = rsmd.getColumnCount();
-            html.append("<tr style='background:#1a1a1a; color:white;'>");
-            for (int i = 1; i <= col; i++) html.append("<th style='padding:10px;'>").append(rsmd.getColumnName(i).toUpperCase()).append("</th>");
-            html.append("</tr>");
-            while (rs.next()) {
-                html.append("<tr>");
-                for (int i = 1; i <= col; i++) html.append("<td style='padding:10px;'>").append(rs.getString(i)).append("</td>");
-                html.append("</tr>");
+        try (Connection conexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             Statement estado = conexion.createStatement();
+             ResultSet resultado = estado.executeQuery(consultaSql)) {
+            
+            ResultSetMetaData metadatos = resultado.getMetaData();
+            int columnas = metadatos.getColumnCount();
+            
+            constructorTabla.append("<tr style='background:#1a1a1a; color:white;'>");
+            for (int i = 1; i <= columnas; i++) {
+                constructorTabla.append("<th style='padding:10px;'>").append(metadatos.getColumnName(i).toUpperCase()).append("</th>");
             }
-        } catch (SQLException e) { return "Error SQL: " + e.getMessage(); }
+            constructorTabla.append("</tr>");
+            
+            while (resultado.next()) {
+                constructorTabla.append("<tr>");
+                for (int i = 1; i <= columnas; i++) {
+                    constructorTabla.append("<td style='padding:10px;'>").append(resultado.getString(i)).append("</td>");
+                }
+                constructorTabla.append("</tr>");
+            }
+        } catch (SQLException e) { return "Error SQL al generar informe: " + e.getMessage(); }
         
-        html.append("</table><br><a href='/html/admin.html' style='display:inline-block; padding:10px 20px; background:#1a1a1a; color:white; text-decoration:none; border-radius:5px;'>Volver al Panel</a></div></body></html>");
-        return html.toString();
+        constructorTabla.append("</table><br><a href='/html/admin.html' style='display:inline-block; padding:10px 20px; background:#333; color:white; text-decoration:none;'>Volver al Panel</a></div></body></html>");
+        return constructorTabla.toString();
     }
 }

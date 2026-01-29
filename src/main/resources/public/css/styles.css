@@ -497,6 +497,54 @@
       text-decoration: underline;
     }
 
+    /* --- MEJORAS ESPECÍFICAS PARA EL INDEX --- */
+
+/* Ajuste de velocidad y suavidad del carrusel */
+.carousel-track {
+    display: flex;
+    gap: 4rem; /* Aumentamos el espacio entre logos para que respiren */
+    animation: scroll 20s linear infinite; /* Bajamos de 30s a 20s: más dinámico */
+    width: max-content; /* Asegura que el contenedor se estire según los logos */
+}
+
+.carousel-track img {
+    width: 140px; /* Logos un poco más grandes para dar "categoría" */
+    opacity: 0.5;
+    filter: grayscale(100%); /* Efecto elegante: logos en gris que colorean al pasar */
+    transition: all 0.3s ease;
+}
+
+.carousel-track img:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    transform: scale(1.1);
+}
+
+/* Animación ajustada para evitar el salto en blanco */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* Se desplaza exactamente la mitad del ancho total del track (porque duplicamos logos) */
+        transform: translateX(-50%);
+    }
+}
+
+/* Mejora de los testimonios para que parezcan más profesionales */
+.testimonial p {
+    font-style: italic;
+    color: #444;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.testimonial h4 {
+    color: #1a1a1a;
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
     /* Media Queries */
     @media (max-width: 768px) {
       .hero h1 {
