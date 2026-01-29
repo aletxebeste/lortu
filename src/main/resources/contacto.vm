@@ -22,7 +22,7 @@
             </a>
         </div>
         <div class="nav-links">
-            <a href="/html/cursoswp.html">Formacion</a>
+            <a href="/html/cursoswp.html">Formación</a>
             <a href="/html/Sobre.html">Nosotros</a>
             <a href="/html/contacto.html">Contacto</a>
             <a href="/html/registro.html" class="btn-primary">Empezar</a>
@@ -30,6 +30,14 @@
     </nav>
 
     <div class="contact-wrapper">
+        
+        #if($enviado == "true")
+        <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 20px; border-radius: 12px; margin-bottom: 30px; text-align: center; font-family: 'Questrial', sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <span style="font-size: 1.2rem; margin-right: 10px;">✔</span>
+            <strong>¡Mensaje enviado con éxito!</strong> Tu consulta ha sido registrada en nuestro sistema y te responderemos en menos de 24 horas.
+        </div>
+        #end
+
         <div class="contact-header">
             <h1>Estamos aquí para ayudarte</h1>
             <p>¿Tienes preguntas sobre nuestros cursos, planes para empresas o soporte técnico? Rellena el formulario y te responderemos en menos de 24 horas.</p>
@@ -57,7 +65,7 @@
             </div>
 
             <div class="form-column">
-                <form action="#" method="POST" class="contact-form">
+                <form action="/contacto" method="POST" class="contact-form">
                     <div class="form-group">
                         <label for="nombre">Nombre completo</label>
                         <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana García" required>
@@ -71,10 +79,10 @@
                     <div class="form-group">
                         <label for="asunto">Asunto</label>
                         <select id="asunto" name="asunto">
-                            <option value="info">Información general</option>
-                            <option value="soporte">Problema técnico</option>
-                            <option value="empresa">Planes para empresas</option>
-                            <option value="otro">Otro</option>
+                            <option value="Información general">Información general</option>
+                            <option value="Problema técnico">Problema técnico</option>
+                            <option value="Planes para empresas">Planes para empresas</option>
+                            <option value="Otro">Otro</option>
                         </select>
                     </div>
 
