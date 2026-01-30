@@ -59,7 +59,10 @@
 
             <div style="background-color: #f4f4f4; padding: 20px; border-radius: 10px; margin-top: 30px; border-left: 5px solid #2563eb;">
                 <h3 style="margin-top: 0; color: #2563eb;">¿Te interesa? Inscríbete ahora</h3>
-                <p style="font-size: 0.9em; margin-bottom: 15px;">Introduce el email con el que te registraste en LORTU para confirmar tu plaza.</p>
+                <p style="font-size: 0.9em; margin-bottom: 15px;">
+                    <strong>Coste del curso: 230€</strong>. Introduce tu email de alumno para reservar tu plaza. 
+                    <br><span style="color: #666;">(Se generará una orden de pago tras confirmar la inscripción).</span>
+                </p>
                 
                 <form action="/inscribir" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <input type="hidden" name="id_curso" value="3">
@@ -68,7 +71,7 @@
                            style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 5px; min-width: 200px;">
                     
                     <button type="submit" class="btn-apuntate" style="border: none; cursor: pointer; background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 5px; font-weight: bold;">
-                        CONFIRMAR PLAZA
+                        CONFIRMAR Y PAGAR
                     </button>
                 </form>
                 <p style="font-size: 0.8em; color: #666; margin-top: 10px;">* Si no tienes cuenta, <a href="/html/registro.html">regístrate primero aquí</a>.</p>

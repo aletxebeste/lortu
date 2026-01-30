@@ -10,7 +10,7 @@ import java.util.Map;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-// IMPORTACIONES PARA EL MOTOR DE PLANTILLAS DINÁMICO
+// IMPORTACIONES PARA EL MOTOR DE WEBS DINAMICAS
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
